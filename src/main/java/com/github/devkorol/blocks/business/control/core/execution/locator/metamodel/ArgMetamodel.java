@@ -1,5 +1,8 @@
 package com.github.devkorol.blocks.business.control.core.execution.locator.metamodel;
 
+import com.github.devkorol.blocks.business.control.core.execution.locator.model.ArgPathModel;
+import java.util.List;
+
 public interface ArgMetamodel {
 
   /**
@@ -8,17 +11,7 @@ public interface ArgMetamodel {
   Class<?> supportedModel();
 
   /**
-   * @return array of paths regarding supported DTO. All paths will be processes by SPeL to extract data from DTO.
+   * @return collection of paths regarding supported model. All paths will be processes by SPeL to extract data.
    */
-  String[] path();
-
-
-  //TODO add DSL
-  default String[] of(String... paths) {
-    return paths;
-  }
-
-  default String join(String... parts) {
-    return String.join("?.", parts);
-  }
+  List<ArgPathModel> path();
 }

@@ -16,6 +16,11 @@ public class ArgModel {
   private String path;
 
   /**
+   * Field name in a given model.
+   */
+  private String name;
+
+  /**
    * Field value from a model by path.
    */
   private Object value;

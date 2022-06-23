@@ -1,12 +1,16 @@
 package com.github.devkorol.blocks.business.control.core.execution.it.bc;
 
+import static java.util.Arrays.asList;
+
 import com.github.devkorol.blocks.business.control.core.BusinessControl;
 import com.github.devkorol.blocks.business.control.core.execution.it.bc.BC_100_ACBean.BC_100_ACMetamodel;
 import com.github.devkorol.blocks.business.control.core.execution.it.dto.SomeInputModel;
 import com.github.devkorol.blocks.business.control.core.execution.it.settings.provider.TestBusinessControlSettingsProvider;
 import com.github.devkorol.blocks.business.control.core.execution.locator.metamodel.ArgMetamodel;
+import com.github.devkorol.blocks.business.control.core.execution.locator.model.ArgPathModel;
 import com.github.devkorol.blocks.business.control.core.execution.model.BusinessControlExecutionModel;
 import com.github.devkorol.blocks.business.control.core.execution.model.ReportEntity;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,15 +44,31 @@ public class BC_100_ACBean {
       return SomeInputModel.class;
     }
 
+
     @Override
-    public String[] path() {
-      return of(
-          SomeInputModel.Fields.id,
-          SomeInputModel.Fields.name,
-          SomeInputModel.Fields.age,
-          SomeInputModel.Fields.someArray,
-          join(SomeInputModel.Fields.inner, SomeInputModel.SomeInnerClass.Fields.inn)
-      );
+    public List<ArgPathModel> path() {
+      return asList(
+          ArgPathModel.builder()
+              .name(SomeInputModel.Fields.id)
+              .path(SomeInputModel.Fields.id)
+              .build(),
+          ArgPathModel.builder()
+              .name(SomeInputModel.Fields.name)
+              .path(SomeInputModel.Fields.name)
+              .build(),
+          ArgPathModel.builder()
+              .name(SomeInputModel.Fields.age)
+              .path(SomeInputModel.Fields.age)
+              .build(),
+          ArgPathModel.builder()
+              .name(SomeInputModel.Fields.someArray)
+              .path(SomeInputModel.Fields.someArray)
+              .build(),
+          ArgPathModel.builder()
+              .name(SomeInputModel.SomeInnerClass.Fields.inn)
+              .path(SomeInputModel.Fields.inner + "." + SomeInputModel.SomeInnerClass.Fields.inn)
+              .build()
+          );
     }
   }
 }

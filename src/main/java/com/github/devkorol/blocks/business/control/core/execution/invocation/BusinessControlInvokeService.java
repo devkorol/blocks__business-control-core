@@ -21,11 +21,12 @@ public class BusinessControlInvokeService {
    */
   public <T> ReportEntity invoke(BusinessControlLocatorModel beanModel, BusinessControlExecutionModel<T> invokeModel,
       List<ArgModel> args) {
-    ReportEntity result = null;
+    ReportEntity report = null;
     Object[] methodArguments = mapArgs(invokeModel, args);
 
     try {
-      result = (ReportEntity) beanModel.getInvocationMethod().invoke(
+      log.debug("Invoke business control bean [{}]", beanModel.getBean().getClass());
+      report = (ReportEntity) beanModel.getInvocationMethod().invoke(
           beanModel.getBean(),
           methodArguments
       );
@@ -39,7 +40,8 @@ public class BusinessControlInvokeService {
           beanModel.getInvocationMethod().getName(), beanModel.getBean().getClass(), methodArguments, e.getCause());
     }
 
-    return result;
+    log.debug("Business control evaluation report [{}]", report);
+    return report;
   }
 
   private <T> Object[] mapArgs(BusinessControlExecutionModel<T> invokeModel, List<ArgModel> args) {

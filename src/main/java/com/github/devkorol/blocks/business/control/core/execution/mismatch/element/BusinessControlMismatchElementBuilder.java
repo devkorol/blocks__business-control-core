@@ -71,7 +71,7 @@ public class BusinessControlMismatchElementBuilder {
       ArgModel argModel = args.get(argIndex);
 
       mismatchElements.add(MismatchElement.builder()
-          .name("TODO")
+          .name(argModel.getName())
           .path(argModel.getPath())
           .value(argModel.getValue())
           .build());
@@ -82,7 +82,7 @@ public class BusinessControlMismatchElementBuilder {
   private List<MismatchElement> markAllArgsAsInvalid(List<ArgModel> args) {
     return args.stream()
         .map(arg -> MismatchElement.builder()
-            .name("TODO")
+            .name(arg.getName())
             .path(arg.getPath())
             .value(arg.getValue())
             .build())

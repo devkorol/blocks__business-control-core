@@ -22,15 +22,16 @@ public class BusinessControlArgService {
    * Find metamodel paths in input model and retrieve values.
    */
   public <T> List<ArgModel> read(T model, ArgMetamodel metamodel) {
-    if (metamodel.path() == null || metamodel.path().length == 0) {
+    if (metamodel.path() == null || metamodel.path().isEmpty()) {
       throw new BusinessControlArgMetamodelPathEmptyException(metamodel.getClass());
     }
 
     log.debug("Start reading args from input model by metamodel...");
-    return Arrays.stream(metamodel.path())
+    return metamodel.path().stream()
         .map(p -> ArgModel.builder()
-            .path(p)
-            .value(argReader.get(p, model))
+            .path(p.getPath())
+            .name(p.getName())
+            .value(argReader.get(p.getPath(), model))
             .build())
         .collect(Collectors.toList());
   }

@@ -59,17 +59,7 @@ class BusinessControlLocatorTest {
         .bean(new Object())
         .invocationMethod(ReflectionUtils.findMethod(Object.class, "toString"))
         .invocationMethodArgNames(Collections.emptyList())
-        .argMetamodels(asList(new ArgMetamodel() {
-          @Override
-          public Class<?> supportedModel() {
-            return null;
-          }
-
-          @Override
-          public String[] path() {
-            return new String[0];
-          }
-        }))
+        .argMetamodels(Collections.emptyList())
         .build();
   }
 

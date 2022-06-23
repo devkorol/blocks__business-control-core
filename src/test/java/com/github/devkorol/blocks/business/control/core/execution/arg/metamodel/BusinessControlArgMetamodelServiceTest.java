@@ -2,9 +2,10 @@ package com.github.devkorol.blocks.business.control.core.execution.arg.metamodel
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.github.devkorol.blocks.business.control.core.execution.locator.metamodel.ArgMetamodel;
+import com.github.devkorol.blocks.business.control.core.execution.locator.model.ArgPathModel;
 import com.github.devkorol.blocks.business.control.core.execution.locator.model.BusinessControlLocatorModel;
 import com.github.devkorol.blocks.business.control.core.execution.metamodel.BusinessControlArgMetamodelService;
 import java.util.List;
@@ -25,9 +26,9 @@ class BusinessControlArgMetamodelServiceTest {
         //multi models
         Arguments.of("1", "valid", asList(get(Long.class, "invalid"), get(String.class, "valid"))),
         //super class models
-        Arguments.of(new Long(1), "valid", asList(get(String.class, "invalid"), get(Number.class, "valid"))),
+        Arguments.of(1L, "valid", asList(get(String.class, "invalid"), get(Number.class, "valid"))),
         //direct class has more priority then super class
-        Arguments.of(new Long(1), "valid", asList(get(Number.class, "invalid"), get(Long.class, "valid")))
+        Arguments.of(1L, "valid", asList(get(Number.class, "invalid"), get(Long.class, "valid")))
     );
   }
 
@@ -43,7 +44,7 @@ class BusinessControlArgMetamodelServiceTest {
         .build();
 
     ArgMetamodel metamodel = service.findMetamodel(model, businessControlLocatorModel);
-    assertArrayEquals(new String[]{expected}, metamodel.path());
+    assertEquals(expected, metamodel.path().get(0).getPath());
   }
 
   private static ArgMetamodel get(Class<?> supportedModel, String path) {
@@ -54,8 +55,11 @@ class BusinessControlArgMetamodelServiceTest {
       }
 
       @Override
-      public String[] path() {
-        return new String[]{path};
+      public List<ArgPathModel> path() {
+        return singletonList(ArgPathModel.builder()
+            .name(path)
+            .path(path)
+            .build());
       }
     };
   }
