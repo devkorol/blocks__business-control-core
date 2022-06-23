@@ -1,0 +1,8 @@
+app.blocks.business.control:
+  filter.chain.default:
+    pass: true # uses when no filters was applied
+  settings.default:  # define values for default settings provider
+    active: true
+    critical: false
+  mismatch.builder:
+    mode: MIXED #[ALL, SPECIFIED, MIXED, NONE]
