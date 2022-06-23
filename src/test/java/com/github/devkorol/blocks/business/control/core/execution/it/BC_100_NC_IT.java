@@ -13,7 +13,9 @@ import com.github.devkorol.blocks.business.control.core.execution.it.config.Busi
 import com.github.devkorol.blocks.business.control.core.execution.it.settings.provider.TestBusinessControlSettingsProvider;
 import com.github.devkorol.blocks.business.control.core.execution.it.utils.ResultCaptor;
 import com.github.devkorol.blocks.business.control.core.execution.model.BusinessControlExecutionRequest;
+import com.github.devkorol.blocks.business.control.core.execution.model.Mismatch;
 import com.github.devkorol.blocks.business.control.core.execution.settings.BusinessControlSettingsService;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,9 @@ class BC_100_NC_IT {
         .model(new Object())
         .build();
 
-    executionService.execute(request);
+    Optional<Mismatch> mismatch = executionService.execute(request);
 
+    assertFalse(mismatch.isPresent());
     assertFalse(resultCaptor.getResult(), "inactive due to settings");
     verify(settingsService).get(eq(request));
     verify(filterChain).isActiveForRequest(eq(request), any());
