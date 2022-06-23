@@ -25,7 +25,7 @@ public class BusinessControlArgMetamodelService {
    * @param <T>       any types of model is supported
    */
   public <T> ArgMetamodel findMetamodel(T model, BusinessControlLocatorModel beanModel) {
-    log.debug("Start finding metamodel for input class {}", model.getClass().getName());
+    log.debug("Start finding metamodel for input class [{}]", model.getClass().getName());
     ArgMetamodel metamodel = null;
     ArgMetamodel metamodelSuper = null;
 
@@ -46,7 +46,7 @@ public class BusinessControlArgMetamodelService {
     if (isNull(metamodel)) {
       throw new BusinessControlArgMetamodelForClassNotFoundException(beanModel.getBean().getClass(), model.getClass());
     }
-    log.debug("Found metamodel {}", metamodel.getClass().getName());
+    log.debug("Found metamodel [{}]", metamodel.getClass().getName());
     return metamodel;
   }
 }

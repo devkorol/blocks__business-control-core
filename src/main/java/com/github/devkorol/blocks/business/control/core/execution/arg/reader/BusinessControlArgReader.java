@@ -26,10 +26,10 @@ public class BusinessControlArgReader {
   public <T> T get(String path, Object o) {
     T result = null;
     try {
-      log.trace("Parse expression {}", path);
+      log.trace("Parse expression [{}]", path);
       Expression exp = parser.parseExpression(path);
       result = (T) exp.getValue(context, o);
-      log.trace("Found result {}", result);
+      log.trace("Found result [{}]", result);
     } catch (SpelParseException | SpelEvaluationException e) {
       throw new BusinessControlArgReaderException(path, e);
     }

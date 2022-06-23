@@ -24,7 +24,7 @@ public class DefaultBusinessControlSettingsProvider implements BusinessControlSe
   @Override
   @Cacheable(cacheNames = BUSINESS_CONTROL_SETTINGS_CACHE, cacheManager = BUSINESS_CONTROL_CACHE)
   public BusinessControlSettingsModel get(String code, @Nullable String flowCode, @Nullable OffsetDateTime onDate) {
-    log.debug("Return default settings for business control {}", code);
+    log.debug("Return default settings for business control [{}]", code);
     return BusinessControlSettingsModel.builder()
         .active(properties.isActive())
         .critical(properties.isCritical())

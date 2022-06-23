@@ -41,7 +41,7 @@ public class BusinessControlExecutionService {
     BusinessControlSettingsModel settings = settingsService.get(request);
 
     if (!filterChain.isActiveForRequest(request, settings)) {
-      log.debug("Business control <{}> is disabled for request via settings or filters", request.getCode());
+      log.debug("Business control [{}] is disabled for request via settings or filters", request.getCode());
       return Optional.empty();
     }
 

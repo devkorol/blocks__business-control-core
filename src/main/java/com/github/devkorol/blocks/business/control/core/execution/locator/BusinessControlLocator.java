@@ -31,7 +31,7 @@ public class BusinessControlLocator {
    */
   @Cacheable(key = "#code+'-'+#flowCode", cacheNames = BUSINESS_CONTROL_BEAN_LOOKUP_CACHE, cacheManager = BUSINESS_CONTROL_CACHE)
   public BusinessControlLocatorModel locate(String code, @Nullable String flowCode) {
-    log.debug("Locating bean by code <{}> and flow <{}>", code, flowCode);
+    log.debug("Locating bean by code [{}] and flow [{}]", code, flowCode);
     BusinessControlLocatorModel businessControlBean = null;
     BusinessControlLocatorModel businessControlBeanNullFlowCode = null;
 
@@ -41,14 +41,14 @@ public class BusinessControlLocator {
       }
 
       if (isNull(flowCode) && isNull(controlBean.getFlowCode())) {
-        log.debug("Found by code and flowCode <null> bean {}", controlBean.getBean().getClass().getName());
+        log.debug("Found by code and flowCode [null] bean [{}]", controlBean.getBean().getClass().getName());
         businessControlBean = controlBean;
         break;
       }
 
       if (nonNull(flowCode)) {
         if (flowCode.equalsIgnoreCase(controlBean.getFlowCode())) {
-          log.debug("Found by code and flowCode bean {}", controlBean.getBean().getClass().getName());
+          log.debug("Found by code and flowCode bean [{}]", controlBean.getBean().getClass().getName());
           businessControlBean = controlBean;
           break;
         } else if (isNull(controlBean.getFlowCode())) {
@@ -61,7 +61,7 @@ public class BusinessControlLocator {
     //bean with null flowCode can be applied to request
     if (isNull(businessControlBean)
         && nonNull(businessControlBeanNullFlowCode)) {
-      log.debug("Not found bean with matching flowCode so provided with flowCode=null bean  {}",
+      log.debug("Not found bean with matching flowCode so provided with flowCode=null bean [{}]",
           businessControlBeanNullFlowCode.getBean().getClass().getName());
       businessControlBean = businessControlBeanNullFlowCode;
     }

@@ -43,7 +43,7 @@ public class BusinessControlStarter implements CommandLineRunner {
 
     for (Entry<String, Object> bean : allBeansWithNames.entrySet()) {
       BusinessControl annotation = context.findAnnotationOnBean(bean.getKey(), BusinessControl.class);
-      log.debug("bean with name {} annotated with code {} and flow code {}",
+      log.debug("bean [{}] annotated with code [{}] and flow code [{}]",
           bean.getKey(), annotation.code(), annotation.flowCode());
 
       Method executionMethod = locateInvocationMethod.locate(annotation.invocationMethod(), bean.getValue().getClass());

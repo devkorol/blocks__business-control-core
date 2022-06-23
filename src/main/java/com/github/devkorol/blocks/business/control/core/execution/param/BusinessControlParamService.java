@@ -15,13 +15,13 @@ public class BusinessControlParamService {
   private final BusinessControlParamProvider paramProvider;
 
   public BusinessControlParamMap get(BusinessControlExecutionRequest<?> request) {
-    log.debug("Start finding business control params for code {}, flow {}, date {}",
+    log.debug("Start finding business control params for code [{}], flow [{}], date [{}]",
         request.getCode(), request.getFlowCode(), request.getOnDate());
 
     BusinessControlParamMap paramMap = paramProvider.get(
         request.getCode(), request.getFlowCode(), request.getOnDate());
 
-    log.debug("Found business control paramMap <{}>", paramMap);
+    log.debug("Found business control paramMap [{}]", paramMap);
     return paramMap;
   }
 }

@@ -20,7 +20,7 @@ public class DefaultBusinessControlParamProvider implements BusinessControlParam
   @Cacheable(cacheNames = BUSINESS_CONTROL_PARAM_CACHE, cacheManager = BUSINESS_CONTROL_CACHE)
   public BusinessControlParamMap get(
       String code, @Nullable String flowCode, @Nullable OffsetDateTime onDate) {
-    log.debug("Return default params for business control {}", code);
+    log.debug("Return default params for business control [{}]", code);
     return new BusinessControlParamMap();
   }
 }

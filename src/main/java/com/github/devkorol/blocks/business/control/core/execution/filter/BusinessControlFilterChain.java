@@ -34,13 +34,13 @@ public class BusinessControlFilterChain {
       passed = filter.execute(request, settings);
 
       if (Boolean.FALSE.equals(passed)) {
-        log.debug("Request with code {} was filtered to false by filter {}", request.getCode(), filter.getClass());
+        log.debug("Request with code [{}] was filtered to false by filter [{}]", request.getCode(), filter.getClass());
         break;
       }
     }
 
     if (isNull(passed)) {
-      log.warn("No filters was applied to request with code {}. Return default value", request.getCode());
+      log.warn("No filters was applied to request with code [{}]. Return default value", request.getCode());
       passed = defaultProperties.isPass();
     }
 
