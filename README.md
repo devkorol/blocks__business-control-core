@@ -7,6 +7,9 @@ TODO
 # How to extend
 TODO
 
+#Flow
+
+![](business-control-flow.svg)
 
 #TODO
 Add DSL `ArgMetamodel.path`

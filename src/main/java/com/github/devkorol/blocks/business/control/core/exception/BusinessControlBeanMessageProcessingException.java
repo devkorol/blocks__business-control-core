@@ -11,7 +11,7 @@ public class BusinessControlBeanMessageProcessingException extends BusinessContr
   private final Map<String, Object> messageParams;
 
   public BusinessControlBeanMessageProcessingException(String message, Map<String, Object> messageParams, Throwable e) {
-    super(getMessage(message, messageParams));
+    super(getMessage(message, messageParams), e);
     this.message = message;
     this.messageParams = messageParams;
   }

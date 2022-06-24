@@ -45,8 +45,9 @@ public class BusinessControlExecutionService {
       return Optional.empty();
     }
 
-    BusinessControlLocatorModel beanModel = businessControlLocator.locate(request.getCode(), request.getFlowCode());
     BusinessControlParamMap params = paramService.get(request);
+
+    BusinessControlLocatorModel beanModel = businessControlLocator.locate(request.getCode(), request.getFlowCode());
 
     ArgMetamodel metamodel = argMetamodelService.findMetamodel(request.getModel(), beanModel);
     List<ArgModel> args = argService.read(request.getModel(), metamodel);

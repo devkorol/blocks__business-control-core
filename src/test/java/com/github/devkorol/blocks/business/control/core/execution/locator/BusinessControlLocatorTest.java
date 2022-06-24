@@ -33,11 +33,11 @@ class BusinessControlLocatorTest {
         Arguments.of("code", "flow", "flow", asArray(get("code1", "flow1"), get("code", "flow"))),
         //same code but different flows
         Arguments.of("code", "flow", "flow", asArray(get("code", "flow1"), get("code", "flow"))),
-        //different flow and null
+        //different flow and null as default
         Arguments.of("code", "flow", null, asArray(get("code", "flow1"), get("code", null))),
-        //exact flow and null
+        //exact flow and null must have lower priority than specified
         Arguments.of("code", "flow", "flow", asArray(get("code", null), get("code", "flow"))),
-        //null flow
+        //null input flow must return with null
         Arguments.of("code", null, null, asArray(get("code", "flow"), get("code", null)))
     );
   }

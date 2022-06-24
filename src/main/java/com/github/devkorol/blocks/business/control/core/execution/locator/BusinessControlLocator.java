@@ -40,21 +40,17 @@ public class BusinessControlLocator {
         continue;
       }
 
-      if (isNull(flowCode) && isNull(controlBean.getFlowCode())) {
-        log.debug("Found by code and flowCode [null] bean [{}]", controlBean.getBean().getClass().getName());
+      if (flowCode == controlBean.getFlowCode()) {
+        log.debug("Found by code and flowCode equals bean [{}]", controlBean.getBean().getClass().getName());
         businessControlBean = controlBean;
         break;
-      }
-
-      if (nonNull(flowCode)) {
-        if (flowCode.equalsIgnoreCase(controlBean.getFlowCode())) {
-          log.debug("Found by code and flowCode bean [{}]", controlBean.getBean().getClass().getName());
-          businessControlBean = controlBean;
-          break;
-        } else if (isNull(controlBean.getFlowCode())) {
-          //save for later
-          businessControlBeanNullFlowCode = controlBean;
-        }
+      } else if (nonNull(flowCode) && flowCode.equalsIgnoreCase(controlBean.getFlowCode())) {
+        log.debug("Found by code and flowCode bean [{}]", controlBean.getBean().getClass().getName());
+        businessControlBean = controlBean;
+        break;
+      } else if (isNull(controlBean.getFlowCode())) {
+        //save for later
+        businessControlBeanNullFlowCode = controlBean;
       }
     }
 
