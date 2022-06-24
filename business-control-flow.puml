@@ -1,160 +1,170 @@
 @startuml
-start
-:Invoke business control over request;
+!pragma useVerticalIf on
 
+start
+:Start evaluating business control over request;
+
+floating note left #lightgrey: Gather settings for business control;
 group Settings
-  :Gather settings for business control;
-  -> code, flow code and date;
   :Invoke settings provider;
+  -> code, flow code and date;
 
   if (Custom settings provider exist) is (true) then
     :Call custom provider;
-    note: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/settings/provider/BusinessControlSettingsProvider.java BusinessControlSettingsProvider]]
+    note right: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/settings/provider/BusinessControlSettingsProvider.java BusinessControlSettingsProvider]]
   else
     :By default return settings from a properties file;
   endif
+-> business control settings;
 end group
 
-:keep settings for later use;
+:Keep settings for further evaluation;
 
+floating note left #lightgrey: Evaluate the ability to perform buisness control\nusing a chain of filters;
 group Filter chain
   :Get filters list;
+  -> initial request,\nbusiness control settings;
   note right: You can add custom filters \nby implementing [[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/filter/processor/BusinessControlFilterProcessor.java BusinessControlFilterProcessor]]
-  while (for each filter in list)
-    -> initial request,\nbusiness control settings;
-    :invoke filter;
-    if (is active by filter?) then (false)
+  while (For each filter in list)
+    :Invoke filter;
+    if (Control is active by filter?) then (false)
       :Stop on first [false] result;
       break
     endif
-  backward :go to the next filter;
-  endwhile (all filters was invoked)
+  backward :Go to the next filter;
+  endwhile (All filters\nwas invoked)
 
-  if (filter result is [null]) then (true)
+  if (Filter result is [null]) then (true)
     :Set filter default result from properties;
   endif
 end group
 
-if (filter result) then (true)
+if (Filter result) then (true)
   :Proceed to the next steps;
 else
-  :Stop business control execution;
+  :Stop business control evaluating;
   -> empty report;
   end
 endif
 
+floating note left #lightgrey: Gather params for business control;
 group Params
-  :Gather params for business control;
-  -> code, flow code and date;
   :Invoke params provider;
+  -> code, flow code and date;
 
   if (Custom params provider exist) is (true) then
     :Call params provider;
-    note: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/param/provider/BusinessControlParamProvider.java BusinessControlParamProvider]]
+    note right: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/param/provider/BusinessControlParamProvider.java BusinessControlParamProvider]]
   else
     :By default return empty params;
   endif
 end group
 
-:keep params for later use;
+:keep params for later business control invocation;
 
+
+floating note left #lightgrey: Find business control bean model in context;
 group Bean locator
-  :find business control bean model in context;
+  :Invoke business control locator;
   -> code, flow code;
 
-  while (for each registered bean)
-    if (code equals) then (true)
-
-      if (flow code equals by link) then (true)
+  while (For each registered bean)
+    if (Code equals) then (true)
+      if (Flow code equals by link) then (true)
         :Set found business control bean;
         break;
-      elseif (flow code not [null] \nand equals bean flow code)
+      elseif (Flow code not [null] \nand equals ignore case) then (true)
         :Set found business control bean;
         break;
-      elseif (bean flow code is [null])
-        :Keep nulled flow code bead this for further decision making;
+      elseif (Bean flow code is [null]) then (true)
+        :Keep nulled flow code bean\nfor further decision making;
       endif
     endif
   backward :Go to the next bean;
-  endwhile
-:Check result of finding business control bean;
-if (Found bean is [null]\nand found nulled flow code bead) then (true)
-  :Set nulled flow code bead as suitable for this request;
-endif
-end group
+  endwhile (no more registered beans)
 
-:keep business control bean model for later use;
-
-group Metamodel lookup
-  :find suitable metamodel for business control applying to request model;
-  -> request model, business control bean model;
-  while (for each metamodel in business control bean model)
-
-    if (request model class equals supported by metamodel) then (true)
-      :Set found metamodel;
-      break;
-    elseif (request model class extends supported by metamodel)
-      :Keep non-exact metamodel for further decision making;
-    endif
-
-  backward :Go to the next metamodel;
-  endwhile
-
-  :Check result of finding metamodel;
-  if (Found metamodel is [null]) then (true)
-    :Set non-exact metamodel as suitable for this request;
+  :Check result of finding business control bean;
+  if (Found bean is [null]\nand exist nulled flow code bean) then (true)
+    :Set nulled flow code bean as suitable for this request;
   endif
 end group
 
-:keep arg metamodel for later use;
+:keep business control bean model;
 
-group Argument accessor
-  :gather arguments from input model by arg metamodel;
-  -> request model, arg metamodel;
-  :get arguments from metamodel;
+floating note left #lightgrey: Find suitable metamodel for business control\napplying to request model;
+group Metamodel lookup
+  :Invoke metamodel locator;
+  -> request model, business control bean model;
 
-  while (for each argument in metamodel)
-     :get argument path;
-     :evaluate SPeL path over input model;
-     :build argument model;
-  backward :Go to the next argument;
-  endwhile
-  :collect argument models;
+  while (For each metamodel in business control bean model)
+    if (Request model class equals supported by metamodel) then (true)
+      :Set found metamodel;
+      break;
+    elseif (Request model class extends supported by metamodel)
+      :Keep non-exact metamodel for further decision making;
+    endif
+
+  backward: Go to the next;
+  endwhile (no more metamodels for bean)
+
+  :Check result of finding metamodel;
+  if (Found metamodel is [null]) then (true)
+    :Set metamodel for superclass as suitable for this request;
+  endif
 end group
 
-:keep argument models for later use;
+:keep arg metamodel for argument processing;
 
+floating note left #lightgrey: Gather arguments from input model\nby arg metamodel;
+group Argument accessor
+  :Invoke argument accessor;
+  -> request model, arg metamodel;
+  :Get arguments from metamodel;
+
+  while (For each argument in metamodel)
+     :Get argument path;
+     :Evaluate SPeL path over input model;
+     :Build argument model;
+  backward: Go to the next argument;
+  endwhile (no more arguments)
+  :Collect argument models to list;
+end group
+
+:keep argument models for business control invociation;
+
+floating note left #lightgrey: Invoke business control bean with\nsettings, params, arguments, request;
 group Invoke
-  :prepare arguments and model for business control invoking;
-  :invoke business control bean method;
-  :retrieve evaluation report;
+  :Prepare arguments and model for business control invoking;
+  :Invoke business control bean method;
+  :Retrieve evaluation report;
 end group
 
 :keep business control report;
 
+floating note left #lightgrey: Build business control mismatch report;
 group Mismatch builder
-  if (mismatch report is present) then (true)
-    :create mismatch element;
-    :set code and criticality from settings;
-    :invoke message formatter;
+  if (Mismatch report is present) then (true)
+    :Create mismatch element;
+    :Set code and criticality from settings;
+    :Invoke message formatter;
 
     if (Custom message formatter exist) is (true) then
       :Call message formatter;
-      note: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/mismatch/message/BusinessControlMismatchMessageFormatter.java BusinessControlMismatchMessageFormatter]]
+      note right: Have a look to implement \n[[https://github.com/devkorol/blocks__business-control-core/blob/main/src/main/java/com/github/devkorol/blocks/business/control/core/execution/mismatch/message/BusinessControlMismatchMessageFormatter.java BusinessControlMismatchMessageFormatter]]
     else
-      :By default uses [[https://handlebarsjs.com/ handlebars]] message formater;
+      :By default uses [[https://handlebarsjs.com/ handlebars]]\nmessage formater;
     endif
 
     :fill mismatch elements mode from properties;
     if (SPECIFIED is selected) then (true)
-      :Add to mismatch elements only specified \nin business control report arguments;
+      :Add to mismatch elements only \nspecified in business control\nreport arguments;
     elseif (ALL is selected) then (true)
       :Add to mismatch elements all \narguments from metamodel;
     elseif (MIXED is selected) then (true)
        if (invalid arguments was provided\nin business control report) then (true)
-          :Add to mismatch elements only specified arguments;
+          :Add to mismatch elements only\nspecified arguments;
         else
-          :Add to mismatch elements all \narguments from metamodel;
+          :Add to mismatch elements all\narguments from metamodel;
       endif
     elseif (NONE is selected) then (true)
       :Leave mismatch elements empty;

@@ -12,5 +12,5 @@ TODO
 ![](business-control-flow.svg)
 
 #TODO
-Add DSL `ArgMetamodel.path`
-
+* Add DSL `ArgMetamodel.path`
+* Check "distance" and pick metamodel by closest superclass here `BusinessControlArgMetamodelService.java:44` 
