@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.Singular;
 
 /**
- * BusinessControlSettingsModel - store basic settings for business control wich will be used in execution.
+ * BusinessControlSettingsModel - store basic settings for business control which will be used in execution.
  */
 @Data
 @Builder
